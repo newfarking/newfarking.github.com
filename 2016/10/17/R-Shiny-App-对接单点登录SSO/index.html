@@ -4,18 +4,40 @@
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="chrome=1">
   
-  <title>王新远个人博客</title>
+  <title>R Shiny App 对接单点登录SSO | 王新远个人博客</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
   
     <meta name="author" content="wangxinyuan">
   
   
-  <meta property="og:type" content="website">
-<meta property="og:title" content="王新远个人博客">
-<meta property="og:url" content="http://newfarking.com/index.html">
+    <meta name="description" content="RStudio Shiny Pro是带有登录认证的功能的，但是开源版本是没有的。本文主要介绍开源版本R Shiny App如何对接单点登录。两个名词介绍：
+
+R Shiny App: A web application framework for R
+单点登录: 单点登录（Single Sign On），简称为 SSO，是目前比较流行的企业业务整合的解决方案之一。SSO的定义是在多个应用系统中，用">
+  
+  <meta name="description" content="RStudio Shiny Pro是带有登录认证的功能的，但是开源版本是没有的。本文主要介绍开源版本R Shiny App如何对接单点登录。两个名词介绍：
+
+R Shiny App: A web application framework for R
+单点登录: 单点登录（Single Sign On），简称为 SSO，是目前比较流行的企业业务整合的解决方案之一。SSO的定义是在多个应用系统中，用">
+<meta property="og:type" content="article">
+<meta property="og:title" content="R Shiny App 对接单点登录SSO">
+<meta property="og:url" content="http://newfarking.com/2016/10/17/R-Shiny-App-对接单点登录SSO/index.html">
 <meta property="og:site_name" content="王新远个人博客">
+<meta property="og:description" content="RStudio Shiny Pro是带有登录认证的功能的，但是开源版本是没有的。本文主要介绍开源版本R Shiny App如何对接单点登录。两个名词介绍：
+
+R Shiny App: A web application framework for R
+单点登录: 单点登录（Single Sign On），简称为 SSO，是目前比较流行的企业业务整合的解决方案之一。SSO的定义是在多个应用系统中，用">
+<meta property="og:image" content="http://newfarking.com/img/auth.jpg">
+<meta property="og:image" content="http://newfarking.com/img/logout.png">
+<meta property="og:image" content="http://newfarking.com/img/login.png">
+<meta property="og:updated_time" content="2016-10-17T05:22:13.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="王新远个人博客">
+<meta name="twitter:title" content="R Shiny App 对接单点登录SSO">
+<meta name="twitter:description" content="RStudio Shiny Pro是带有登录认证的功能的，但是开源版本是没有的。本文主要介绍开源版本R Shiny App如何对接单点登录。两个名词介绍：
+
+R Shiny App: A web application framework for R
+单点登录: 单点登录（Single Sign On），简称为 SSO，是目前比较流行的企业业务整合的解决方案之一。SSO的定义是在多个应用系统中，用">
+<meta name="twitter:image" content="http://newfarking.com/img/auth.jpg">
   
   
   <link rel="stylesheet" href="/css/style.css">
@@ -45,13 +67,7 @@
   </nav>
   <div class="clearfix"></div>
 </header>
-    <div class="content">
-
-
-
-
-  
-    <article class="post">
+    <div class="content"><article class="post">
   <header>
     
       <div class="icon"></div>
@@ -63,7 +79,7 @@
     
     
   
-    <h1 class="title"><a href="/2016/10/17/R-Shiny-App-对接单点登录SSO/">R Shiny App 对接单点登录SSO</a></h1>
+    <h1 class="title">R Shiny App 对接单点登录SSO</h1>
   
 
   </header>
@@ -102,7 +118,7 @@
 
     
   </div>
-  <footer class="end-sep">
+  <footer>
     
       
       
@@ -112,57 +128,24 @@
 </article>
 
 
-
-  
-    <article class="post">
-  <header>
-    
-      <div class="icon"></div>
-      <a href="/2016/10/16/hello-world/">
-  <time datetime="2016-10-16T13:56:28.000Z">
-    2016-10-16
-  </time>
-</a>
-    
-    
-  
-    <h1 class="title"><a href="/2016/10/16/hello-world/">Hello World</a></h1>
-  
-
-  </header>
-  
-  <div class="entry">
-    
-      <p>Welcome to <a href="https://hexo.io/" target="_blank" rel="external">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/" target="_blank" rel="external">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html" target="_blank" rel="external">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues" target="_blank" rel="external">GitHub</a>.</p>
-<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ hexo new <span class="string">"My New Post"</span></div></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/writing.html" target="_blank" rel="external">Writing</a></p>
-<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ hexo server</div></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/server.html" target="_blank" rel="external">Server</a></p>
-<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ hexo generate</div></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/generating.html" target="_blank" rel="external">Generating</a></p>
-<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ hexo deploy</div></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/deployment.html" target="_blank" rel="external">Deployment</a></p>
-
-    
-  </div>
-  <footer class="end-sep">
-    
-      
-      
-    
-    <div class="clearfix"></div>
-  </footer>
-</article>
-
-
-
-  
-
-  <nav id="pagination">
-  
-  
-  <div class="clearfix"></div>
-</nav>
+<section id="comment">
+<!-- 多说评论框 start -->
+	<div class="ds-thread" data-thread-key="2016/10/17/R-Shiny-App-对接单点登录SSO/" data-title="R Shiny App 对接单点登录SSO" data-url="http://newfarking.github.io/http://newfarking.com/2016/10/17/R-Shiny-App-对接单点登录SSO/"></div>
+<!-- 多说评论框 end -->
+<!-- 多说公共JS代码 start (一个网页只需插入一次) -->
+<script type="text/javascript">
+var duoshuoQuery = {short_name:"newfarking"};
+	(function() {
+		var ds = document.createElement('script');
+		ds.type = 'text/javascript';ds.async = true;
+		ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+		ds.charset = 'UTF-8';
+		(document.getElementsByTagName('head')[0] 
+		 || document.getElementsByTagName('body')[0]).appendChild(ds);
+	})();
+	</script>
+<!-- 多说公共JS代码 end -->
+</section>
 
 </div>
   </div>
