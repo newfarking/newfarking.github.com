@@ -1,0 +1,182 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="chrome=1">
+  
+  <title>R Shiny代码模块化 | 王新远个人博客</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+  
+    <meta name="author" content="wangxinyuan">
+  
+  
+    <meta name="description" content="本文首先会讲解一般RShiny App web开发基本代码结构；然后会介绍利用R shiny Module的功能来解决web项目内容扩大时的各种问题；其中会详细介绍组件ID管理的问题；
+R Shiny代码模块化借住RShiny App web框架和shinydashboard布局，简化一个数据展示web平台的代码结构如下：当web内容逐渐扩大，就面临着以下三个问题：
+
+没法团队多人协作开发；因">
+  
+  <meta name="description" content="本文首先会讲解一般RShiny App web开发基本代码结构；然后会介绍利用R shiny Module的功能来解决web项目内容扩大时的各种问题；其中会详细介绍组件ID管理的问题；
+R Shiny代码模块化借住RShiny App web框架和shinydashboard布局，简化一个数据展示web平台的代码结构如下：当web内容逐渐扩大，就面临着以下三个问题：
+
+没法团队多人协作开发；因">
+<meta property="og:type" content="article">
+<meta property="og:title" content="R Shiny代码模块化">
+<meta property="og:url" content="http://newfarking.com/2016/10/25/R-Shiny代码模块化/index.html">
+<meta property="og:site_name" content="王新远个人博客">
+<meta property="og:description" content="本文首先会讲解一般RShiny App web开发基本代码结构；然后会介绍利用R shiny Module的功能来解决web项目内容扩大时的各种问题；其中会详细介绍组件ID管理的问题；
+R Shiny代码模块化借住RShiny App web框架和shinydashboard布局，简化一个数据展示web平台的代码结构如下：当web内容逐渐扩大，就面临着以下三个问题：
+
+没法团队多人协作开发；因">
+<meta property="og:image" content="http://newfarking.com/img/rshinydashboard.jpg">
+<meta property="og:image" content="http://newfarking.com/img/rshinydashboardmodule.jpg">
+<meta property="og:updated_time" content="2016-10-25T05:47:26.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="R Shiny代码模块化">
+<meta name="twitter:description" content="本文首先会讲解一般RShiny App web开发基本代码结构；然后会介绍利用R shiny Module的功能来解决web项目内容扩大时的各种问题；其中会详细介绍组件ID管理的问题；
+R Shiny代码模块化借住RShiny App web框架和shinydashboard布局，简化一个数据展示web平台的代码结构如下：当web内容逐渐扩大，就面临着以下三个问题：
+
+没法团队多人协作开发；因">
+<meta name="twitter:image" content="http://newfarking.com/img/rshinydashboard.jpg">
+  
+  
+  <link rel="stylesheet" href="/css/style.css">
+  <!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+  
+</head>
+
+<body>
+  <div class="wrapper">
+    <header id="header">
+  <div class="title">
+    <h1><a href="/">王新远个人博客</a></h1>
+    <p><a href="/"></a></p>
+  </div>
+  <nav class="nav">
+    <ul>
+      
+        <li><a href="/archives">Archives</a></li>
+      
+        <li><a href="/reading">Reading</a></li>
+      
+        <li><a href="/about">About</a></li>
+      
+      
+    </ul>
+    <div class="clearfix"></div>
+  </nav>
+  <div class="clearfix"></div>
+</header>
+    <div class="content"><article class="post">
+  <header>
+    
+      <div class="icon"></div>
+      <a href="/2016/10/25/R-Shiny代码模块化/">
+  <time datetime="2016-10-25T03:54:24.000Z">
+    2016-10-25
+  </time>
+</a>
+    
+    
+  
+    <h1 class="title">R Shiny代码模块化</h1>
+  
+
+  </header>
+  
+  <div class="entry">
+    
+      <p>  本文首先会讲解一般RShiny App web开发基本代码结构；然后会介绍利用R shiny Module的功能来解决web项目内容扩大时的各种问题；其中会详细介绍组件ID管理的问题；</p>
+<h1 id="R-Shiny代码模块化"><a href="#R-Shiny代码模块化" class="headerlink" title="R Shiny代码模块化"></a>R Shiny代码模块化</h1><p>借住RShiny App web框架和shinydashboard布局，简化一个数据展示web平台的代码结构如下：<br><img src="/img/rshinydashboard.jpg" alt="r shiny dashboard code framework without module"><br>当web内容逐渐扩大，就面临着以下三个问题：</p>
+<ol>
+<li>没法团队多人协作开发；因为都在一个app.R文件，会冲突到死的</li>
+<li>通用组件复用问题；如dygraphOutput的使用，web中多处使用，调用时冗余代码太多</li>
+<li>UI组件ID管理问题；布局控件一多，常有：xxx_yyy_zzz_trend等</li>
+</ol>
+<p>而RShiny App提供的Module功能能解决以上的问题。module化就是将一个功能点的UI逻辑和Server逻辑封装到一起作为一个module，以单个文件保存。<br>Module的官方介绍：<a href="http://shiny.rstudio.com/articles/modules.html" target="_blank" rel="external">http://shiny.rstudio.com/articles/modules.html</a></p>
+<ol>
+<li>团队协作开发，每个人就可以专注于各自的功能点在不同的文件中开发</li>
+<li>组件复用，可讲dygraph的使用封装成一个commonDygraph的module供多个其他功能module调用。</li>
+<li>ID管理非常简单，每个module里面的组件id的命名，只需要保证在这个module里面唯一即可。</li>
+</ol>
+<p>使用module之后项目代码结构可简化如下：<br><img src="/img/rshinydashboardmodule.jpg" alt="r shiny dashboard code framework with module"></p>
+<h2 id="Module管理件ID"><a href="#Module管理件ID" class="headerlink" title="Module管理件ID"></a>Module管理件ID</h2><p>module中的组件的ID只需要保证在该module布局内id唯一即可，无需保证在全局唯一。那么这是如何做到的呢，下面将id相关的逻辑以递归的形式画出：</p>
+<h3 id="UI组件定义："><a href="#UI组件定义：" class="headerlink" title="UI组件定义："></a>UI组件定义：</h3><figure class="highlight r"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># app.R</span></div><div class="line">tabNameFun1UI(<span class="string">'tabName1'</span>)</div><div class="line"><span class="comment"># tabName1.R</span></div><div class="line">tabNameFun1UI &lt;- <span class="keyword">function</span>(id) &#123;</div><div class="line">    ns &lt;- NS(id)</div><div class="line">    commonDygraphUI(ns(<span class="string">'dygraph'</span>)) <span class="comment"># ns('dygraph') = tabName1-dygraph</span></div><div class="line">&#125;</div><div class="line"><span class="comment"># commonDygraph.R</span></div><div class="line">commonDygraphUI &lt;- <span class="keyword">function</span>(id) &#123;</div><div class="line">    ns &lt;- NS(id)</div><div class="line">    textOutput(ns(<span class="string">'text'</span>)) <span class="comment"># ns('text') = tabName1-dygraph-text</span></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>虽然在commonDygraph只需定义组件ID=text。但是实际框架已经将ID转换成了tabName1-dygraph-text保证全局唯一，对于开发者来说不需要关注这个长的id。</p>
+<h3 id="UI组件的调用"><a href="#UI组件的调用" class="headerlink" title="UI组件的调用"></a>UI组件的调用</h3><figure class="highlight r"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># app.R</span></div><div class="line">callModule(tabName1, <span class="string">'tabName1'</span>, session) </div><div class="line"><span class="comment"># tabName1.R</span></div><div class="line">tabName1 &lt;- <span class="keyword">function</span>(input, output, session) &#123;</div><div class="line">    callModule(commonDygraph, <span class="string">'dygraph'</span>, session) <span class="comment"># session$ns = 'tabName1'</span></div><div class="line">&#125;</div><div class="line"><span class="comment"># commonDygraph.R</span></div><div class="line">commonDygraph &lt;- <span class="keyword">function</span>(input, output, session) &#123; <span class="comment"># session$ns = 'tabName1-dygraph'</span></div><div class="line">    output$text &lt;- renderUI(&#123;&#125;) <span class="comment"># output$ns = session$ns = 'tabName1-dygraph'</span></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>可以看出在调用的时候也只需关注当前层的子ID：text（output$text）。最后框架渲染输出至前端时，会根据output$text和output$ns找到ID：tabName1-dygraph-text的组件进行输出内容</p>
+<p><strong><em>不过，引入module后将会带来文件(除app.R)修改必须重启服务的问题。</em></strong></p>
+
+    
+  </div>
+  <footer>
+    
+      
+      
+    
+    <div class="clearfix"></div>
+  </footer>
+</article>
+
+
+<section id="comment">
+<!-- 多说评论框 start -->
+	<div class="ds-thread" data-thread-key="2016/10/25/R-Shiny代码模块化/" data-title="R Shiny代码模块化" data-url="http://newfarking.github.io/http://newfarking.com/2016/10/25/R-Shiny代码模块化/"></div>
+<!-- 多说评论框 end -->
+<!-- 多说公共JS代码 start (一个网页只需插入一次) -->
+<script type="text/javascript">
+var duoshuoQuery = {short_name:"newfarking"};
+	(function() {
+		var ds = document.createElement('script');
+		ds.type = 'text/javascript';ds.async = true;
+		ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+		ds.charset = 'UTF-8';
+		(document.getElementsByTagName('head')[0] 
+		 || document.getElementsByTagName('body')[0]).appendChild(ds);
+	})();
+	</script>
+<!-- 多说公共JS代码 end -->
+</section>
+
+</div>
+  </div>
+  <footer id="footer"><div class="copyright">
+  
+  &copy; 2016 <a href="/">wangxinyuan</a>
+  
+</div>
+<div class="theme-copyright">
+  Theme by <a href="https://github.com/orderedlist" target="_blank">orderedlist</a>
+   | 
+  Redesign by <a href="http://heroicyang.com/" target="_blank">Heroic Yang</a>
+</div>
+<div class="clearfix"></div></footer>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.8/jquery.min.js"></script>
+<script src="/js/scale.fix.js"></script>
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+
+
+<script type="text/javascript">
+  var duoshuoQuery = { short_name: 'newfarking' };
+  (function() {
+    var ds = document.createElement('script');
+    ds.type = 'text/javascript';
+    ds.async = true;
+    ds.src = 'http://static.duoshuo.com/embed.js';
+    ds.charset = 'UTF-8';
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(ds);
+  })();
+</script>
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+  (function($){
+    $('.fancybox').fancybox();
+  })(jQuery);
+</script>
+
+</body>
+</html>
