@@ -4,18 +4,51 @@
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="chrome=1">
   
-  <title>王新远个人博客</title>
+  <title>RStudio Shiny源码解读——web框架 | 王新远个人博客</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
   
     <meta name="author" content="wangxinyuan">
   
   
-  <meta property="og:type" content="website">
-<meta property="og:title" content="王新远个人博客">
-<meta property="og:url" content="http://newfarking.com/index.html">
+    <meta name="description" content="本文粗略的对https://github.com/rstudio/shiny/(2016-11-04) 源码讲解rstudio shiny的整体web框架的运转逻辑。分三部分：
+
+shiny web框架如何使用
+shiny web框架整体概要介绍
+深入rstudio shiny源码分析
+
+1.shiny web框架如何使用官方各种示例：http://shiny.rstudio.com/gall">
+  
+  <meta name="description" content="本文粗略的对https://github.com/rstudio/shiny/(2016-11-04) 源码讲解rstudio shiny的整体web框架的运转逻辑。分三部分：
+
+shiny web框架如何使用
+shiny web框架整体概要介绍
+深入rstudio shiny源码分析
+
+1.shiny web框架如何使用官方各种示例：http://shiny.rstudio.com/gall">
+<meta property="og:type" content="article">
+<meta property="og:title" content="RStudio Shiny源码解读——web框架">
+<meta property="og:url" content="http://newfarking.com/2016/11/04/RStudio-Shiny源码解读——web框架/index.html">
 <meta property="og:site_name" content="王新远个人博客">
+<meta property="og:description" content="本文粗略的对https://github.com/rstudio/shiny/(2016-11-04) 源码讲解rstudio shiny的整体web框架的运转逻辑。分三部分：
+
+shiny web框架如何使用
+shiny web框架整体概要介绍
+深入rstudio shiny源码分析
+
+1.shiny web框架如何使用官方各种示例：http://shiny.rstudio.com/gall">
+<meta property="og:image" content="http://newfarking.com/img/example_shiny.png">
+<meta property="og:image" content="http://newfarking.com/img/shiny_web_framework.png">
+<meta property="og:updated_time" content="2016-11-04T11:33:12.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="王新远个人博客">
+<meta name="twitter:title" content="RStudio Shiny源码解读——web框架">
+<meta name="twitter:description" content="本文粗略的对https://github.com/rstudio/shiny/(2016-11-04) 源码讲解rstudio shiny的整体web框架的运转逻辑。分三部分：
+
+shiny web框架如何使用
+shiny web框架整体概要介绍
+深入rstudio shiny源码分析
+
+1.shiny web框架如何使用官方各种示例：http://shiny.rstudio.com/gall">
+<meta name="twitter:image" content="http://newfarking.com/img/example_shiny.png">
   
   
   <link rel="stylesheet" href="/css/style.css">
@@ -45,13 +78,7 @@
   </nav>
   <div class="clearfix"></div>
 </header>
-    <div class="content">
-
-
-
-
-  
-    <article class="post">
+    <div class="content"><article class="post">
   <header>
     
       <div class="icon"></div>
@@ -63,7 +90,7 @@
     
     
   
-    <h1 class="title"><a href="/2016/11/04/RStudio-Shiny源码解读——web框架/">RStudio Shiny源码解读——web框架</a></h1>
+    <h1 class="title">RStudio Shiny源码解读——web框架</h1>
   
 
   </header>
@@ -108,7 +135,7 @@
 
     
   </div>
-  <footer class="end-sep">
+  <footer>
     
       
       
@@ -118,174 +145,24 @@
 </article>
 
 
-
-  
-    <article class="post">
-  <header>
-    
-      <div class="icon"></div>
-      <a href="/2016/10/25/R-Shiny代码模块化/">
-  <time datetime="2016-10-25T03:54:24.000Z">
-    2016-10-25
-  </time>
-</a>
-    
-    
-  
-    <h1 class="title"><a href="/2016/10/25/R-Shiny代码模块化/">R Shiny代码模块化</a></h1>
-  
-
-  </header>
-  
-  <div class="entry">
-    
-      <p>  本文首先会讲解一般RShiny App web开发基本代码结构；然后会介绍利用R shiny Module的功能来解决web项目内容扩大时的各种问题；其中会详细介绍组件ID管理的问题；</p>
-<h1 id="R-Shiny代码模块化"><a href="#R-Shiny代码模块化" class="headerlink" title="R Shiny代码模块化"></a>R Shiny代码模块化</h1><p>借住RShiny App web框架和shinydashboard布局，简化一个数据展示web平台的代码结构如下：<br><img src="/img/rshinydashboard.jpg" alt="r shiny dashboard code framework without module"><br>当web内容逐渐扩大，就面临着以下三个问题：</p>
-<ol>
-<li>没法团队多人协作开发；因为都在一个app.R文件，会冲突到死的</li>
-<li>通用组件复用问题；如dygraphOutput的使用，web中多处使用，调用时冗余代码太多</li>
-<li>UI组件ID管理问题；布局控件一多，常有：xxx_yyy_zzz_trend等</li>
-</ol>
-<p>而RShiny App提供的Module功能能解决以上的问题。module化就是将一个功能点的UI逻辑和Server逻辑封装到一起作为一个module，以单个文件保存。<br>Module的官方介绍：<a href="http://shiny.rstudio.com/articles/modules.html" target="_blank" rel="external">http://shiny.rstudio.com/articles/modules.html</a></p>
-<ol>
-<li>团队协作开发，每个人就可以专注于各自的功能点在不同的文件中开发</li>
-<li>组件复用，可讲dygraph的使用封装成一个commonDygraph的module供多个其他功能module调用。</li>
-<li>ID管理非常简单，每个module里面的组件id的命名，只需要保证在这个module里面唯一即可。</li>
-</ol>
-<p>使用module之后项目代码结构可简化如下：<br><img src="/img/rshinydashboardmodule.jpg" alt="r shiny dashboard code framework with module"></p>
-<h2 id="Module管理件ID"><a href="#Module管理件ID" class="headerlink" title="Module管理件ID"></a>Module管理件ID</h2><p>module中的组件的ID只需要保证在该module布局内id唯一即可，无需保证在全局唯一。那么这是如何做到的呢，下面将id相关的逻辑以递归的形式画出：</p>
-<h3 id="UI组件定义："><a href="#UI组件定义：" class="headerlink" title="UI组件定义："></a>UI组件定义：</h3><figure class="highlight r"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># app.R</span></div><div class="line">tabNameFun1UI(<span class="string">'tabName1'</span>)</div><div class="line"><span class="comment"># tabName1.R</span></div><div class="line">tabNameFun1UI &lt;- <span class="keyword">function</span>(id) &#123;</div><div class="line">    ns &lt;- NS(id)</div><div class="line">    commonDygraphUI(ns(<span class="string">'dygraph'</span>)) <span class="comment"># ns('dygraph') = tabName1-dygraph</span></div><div class="line">&#125;</div><div class="line"><span class="comment"># commonDygraph.R</span></div><div class="line">commonDygraphUI &lt;- <span class="keyword">function</span>(id) &#123;</div><div class="line">    ns &lt;- NS(id)</div><div class="line">    textOutput(ns(<span class="string">'text'</span>)) <span class="comment"># ns('text') = tabName1-dygraph-text</span></div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>虽然在commonDygraph只需定义组件ID=text。但是实际框架已经将ID转换成了tabName1-dygraph-text保证全局唯一，对于开发者来说不需要关注这个长的id。</p>
-<h3 id="UI组件的调用"><a href="#UI组件的调用" class="headerlink" title="UI组件的调用"></a>UI组件的调用</h3><figure class="highlight r"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># app.R</span></div><div class="line">callModule(tabName1, <span class="string">'tabName1'</span>, session) </div><div class="line"><span class="comment"># tabName1.R</span></div><div class="line">tabName1 &lt;- <span class="keyword">function</span>(input, output, session) &#123;</div><div class="line">    callModule(commonDygraph, <span class="string">'dygraph'</span>, session) <span class="comment"># session$ns = 'tabName1'</span></div><div class="line">&#125;</div><div class="line"><span class="comment"># commonDygraph.R</span></div><div class="line">commonDygraph &lt;- <span class="keyword">function</span>(input, output, session) &#123; <span class="comment"># session$ns = 'tabName1-dygraph'</span></div><div class="line">    output$text &lt;- renderUI(&#123;&#125;) <span class="comment"># output$ns = session$ns = 'tabName1-dygraph'</span></div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>可以看出在调用的时候也只需关注当前层的子ID：text（output$text）。最后框架渲染输出至前端时，会根据output$text和output$ns找到ID：tabName1-dygraph-text的组件进行输出内容</p>
-<p><strong><em>不过，引入module后将会带来文件(除app.R)修改必须重启服务的问题。</em></strong></p>
-
-    
-  </div>
-  <footer class="end-sep">
-    
-      
-      
-    
-    <div class="clearfix"></div>
-  </footer>
-</article>
-
-
-
-  
-    <article class="post">
-  <header>
-    
-      <div class="icon"></div>
-      <a href="/2016/10/17/R-Shiny-App-对接单点登录SSO/">
-  <time datetime="2016-10-17T04:08:32.000Z">
-    2016-10-17
-  </time>
-</a>
-    
-    
-  
-    <h1 class="title"><a href="/2016/10/17/R-Shiny-App-对接单点登录SSO/">R Shiny App 对接单点登录SSO</a></h1>
-  
-
-  </header>
-  
-  <div class="entry">
-    
-      <p>RStudio Shiny Pro是带有登录认证的功能的，但是开源版本是没有的。本文主要介绍开源版本R Shiny App如何对接单点登录。<br>两个名词介绍：</p>
-<ol>
-<li>R Shiny App: <a href="http://shiny.rstudio.com/" target="_blank" rel="external">A web application framework for R</a></li>
-<li>单点登录: 单点登录（Single Sign On），简称为 SSO，是目前比较流行的企业业务整合的解决方案之一。SSO的定义是在多个应用系统中，用户只需要登录一次就可以访问所有相互信任的应用系统。</li>
-</ol>
-<p>一般提供单点登录的第三方服务提供如下三个接口：</p>
-<ol>
-<li>统一的登录页：<a href="http://xxx.com/login，登录成功后返回ticket给用户" target="_blank" rel="external">http://xxx.com/login，登录成功后返回ticket给用户</a></li>
-<li>认证ticket的API，<a href="http://xxx.com/validate?ticket=，返回用户信息" target="_blank" rel="external">http://xxx.com/validate?ticket=，返回用户信息</a></li>
-<li>退出接口：<a href="http://xxx.com/logout" target="_blank" rel="external">http://xxx.com/logout</a></li>
-</ol>
-<p>自己服务器、浏览器、第三方服务的交互一般可以简化如下：</p>
-<p><img src="/img/auth.jpg" alt="logo"></p>
-<h1 id="开始进入正题"><a href="#开始进入正题" class="headerlink" title="开始进入正题"></a>开始进入正题</h1><p>R Shiny App 接入单点认证需要解决一下几个问题</p>
-<ol>
-<li>前端渲染逻辑。现实需要登录OR已登录</li>
-<li>前后端携带认证信息的载体Cookie的交互</li>
-<li>后端认证逻辑两个：ticket的认证，加密用户信息的认证</li>
-<li>全局请求的认证拦截</li>
-</ol>
-<h2 id="1-前端渲染逻辑"><a href="#1-前端渲染逻辑" class="headerlink" title="1. 前端渲染逻辑"></a>1. 前端渲染逻辑</h2><p>此处web前端用的是shinydashboard，server渲染组件代码：<br><figure class="highlight r"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">output$userpanel &lt;- renderUI(&#123;</div><div class="line">  <span class="keyword">if</span> (!is.null(username())) &#123;</div><div class="line">    sidebarUserPanel(</div><div class="line">      span(<span class="string">"Logged in as "</span>, username()),</div><div class="line">      subtitle = a(icon(<span class="string">"sign-out"</span>), <span class="string">"Logout"</span>, onClick=<span class="string">'logout()'</span>, style=<span class="string">'cursor: pointer'</span>))</div><div class="line">  &#125; <span class="keyword">else</span> &#123;</div><div class="line">    sidebarUserPanel(</div><div class="line">     a(id=<span class="string">'login'</span>, <span class="string">"请先登录"</span>, href=<span class="string">"http://xxx.com/login"</span>)</div><div class="line">    )</div><div class="line">  &#125;</div><div class="line">&#125;)</div></pre></td></tr></table></figure></p>
-<p>username为reactive函数，为认证cookie获取用户信息的逻辑。<br>效果：<br><img src="/img/logout.png" alt="已登录状态"><br><img src="/img/login.png" alt="未登录状态"></p>
-<h2 id="2-前后端携带认证信息的载体Cookie的交互"><a href="#2-前后端携带认证信息的载体Cookie的交互" class="headerlink" title="2. 前后端携带认证信息的载体Cookie的交互"></a>2. 前后端携带认证信息的载体Cookie的交互</h2><h3 id="获取前端传来的Cookie"><a href="#获取前端传来的Cookie" class="headerlink" title="获取前端传来的Cookie"></a>获取前端传来的Cookie</h3><figure class="highlight r"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">if</span> (!is.null(session$request$HTTP_COOKIE)) &#123;</div><div class="line">  <span class="keyword">for</span>(cook <span class="keyword">in</span> unlist(strsplit(session$request$HTTP_COOKIE, <span class="string">";"</span>))) &#123;</div><div class="line">    cook &lt;- trim(cook)</div><div class="line">    sp &lt;- unlist(strsplit(cook, <span class="string">"="</span>))</div><div class="line">    <span class="keyword">if</span> (length(sp) == <span class="number">2</span> &amp;&amp; sp[<span class="number">1</span>] == <span class="string">"datauser"</span> &amp;&amp; length(sp[<span class="number">2</span>]) &gt; <span class="number">0</span>) &#123;</div><div class="line">      <span class="keyword">return</span>(sp[<span class="number">2</span>]) <span class="comment"># 拿到</span></div><div class="line">    &#125;</div><div class="line">  &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>此处cookie名为datauser</p>
-<h3 id="加密用户信息存至前端Cookie"><a href="#加密用户信息存至前端Cookie" class="headerlink" title="加密用户信息存至前端Cookie"></a>加密用户信息存至前端Cookie</h3><p>开源版本的R Shiny App不能拿到Response并设置headerSet-Cookie。这里采用shiny向前端传递消息的机制，前端拿到消息后，由JS SetCookie。<br>后端代码：<br><figure class="highlight r"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">session$sendCustomMessage(type = <span class="string">'cookie'</span>, message = list(datauser=username))</div></pre></td></tr></table></figure></p>
-<p>前端代码：<br><figure class="highlight js"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">Shiny.addCustomMessageHandler(<span class="string">"cookie"</span>,</div><div class="line">    <span class="function"><span class="keyword">function</span>(<span class="params">message</span>) </span>&#123;</div><div class="line">        <span class="built_in">document</span>.cookie=<span class="string">"datauser="</span> + message[<span class="string">'datauser'</span>];</div><div class="line">    &#125;</div><div class="line">);</div></pre></td></tr></table></figure></p>
-<h2 id="3-后端认证逻辑两个：ticket的认证，加密用户信息的认证"><a href="#3-后端认证逻辑两个：ticket的认证，加密用户信息的认证" class="headerlink" title="3. 后端认证逻辑两个：ticket的认证，加密用户信息的认证"></a>3. 后端认证逻辑两个：ticket的认证，加密用户信息的认证</h2><h3 id="ticket的认证"><a href="#ticket的认证" class="headerlink" title="ticket的认证"></a>ticket的认证</h3><p>这部分为网络交互，采用httr，GET(<a href="http://xxx.com/validate?ticket=)函数就好" target="_blank" rel="external">http://xxx.com/validate?ticket=)函数就好</a></p>
-<h3 id="加密用户信息的认证"><a href="#加密用户信息的认证" class="headerlink" title="加密用户信息的认证"></a>加密用户信息的认证</h3><p>这部分加密目的是为了存至前端的信息，防止用户修改。另外还可以控制有效期<br><figure class="highlight r"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">加密用户信息=username|expire_time|MD5(username|expire_time|私钥)</div></pre></td></tr></table></figure></p>
-<h2 id="4-全局请求的认证拦截"><a href="#4-全局请求的认证拦截" class="headerlink" title="4. 全局请求的认证拦截"></a>4. 全局请求的认证拦截</h2><p>登录逻辑做好了，接下来就需要对web内所有的请求做拦截。目前没有查到类似其他web架构中的拦截器，采用的是写了一个通用的需要认证的函数。需要加认证的逻辑调用这个函数，否则不会拦截。学习自googleAuthR库中的写法。<br><figure class="highlight r"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">with_auth &lt;- <span class="keyword">function</span>(f, username=<span class="literal">NULL</span>, <span class="keyword">...</span>)&#123;</div><div class="line">  <span class="keyword">if</span>(is.null(username))</div><div class="line">    <span class="keyword">stop</span>(<span class="string">"请先登录"</span>)</div><div class="line">  print(username)</div><div class="line">  <span class="keyword">if</span>(!(username %<span class="keyword">in</span>% as.character(read.table(<span class="string">'./user.txt'</span>, header=<span class="literal">FALSE</span>)$V1))) &#123;</div><div class="line">    <span class="keyword">stop</span>(<span class="string">"未有权限"</span>)</div><div class="line">  &#125;</div><div class="line">  </div><div class="line">  formals(f) &lt;- c(formals(f), list(username=username))</div><div class="line">  f(<span class="keyword">...</span>)</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-
-    
-  </div>
-  <footer class="end-sep">
-    
-      
-      
-    
-    <div class="clearfix"></div>
-  </footer>
-</article>
-
-
-
-  
-    <article class="post">
-  <header>
-    
-      <div class="icon"></div>
-      <a href="/2016/10/16/hello-world/">
-  <time datetime="2016-10-16T13:56:28.000Z">
-    2016-10-16
-  </time>
-</a>
-    
-    
-  
-    <h1 class="title"><a href="/2016/10/16/hello-world/">Hello World</a></h1>
-  
-
-  </header>
-  
-  <div class="entry">
-    
-      <p>Welcome to <a href="https://hexo.io/" target="_blank" rel="external">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/" target="_blank" rel="external">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html" target="_blank" rel="external">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues" target="_blank" rel="external">GitHub</a>.</p>
-<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ hexo new <span class="string">"My New Post"</span></div></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/writing.html" target="_blank" rel="external">Writing</a></p>
-<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ hexo server</div></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/server.html" target="_blank" rel="external">Server</a></p>
-<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ hexo generate</div></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/generating.html" target="_blank" rel="external">Generating</a></p>
-<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ hexo deploy</div></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/deployment.html" target="_blank" rel="external">Deployment</a></p>
-
-    
-  </div>
-  <footer class="end-sep">
-    
-      
-      
-    
-    <div class="clearfix"></div>
-  </footer>
-</article>
-
-
-
-  
-
-  <nav id="pagination">
-  
-  
-  <div class="clearfix"></div>
-</nav>
+<section id="comment">
+<!-- 多说评论框 start -->
+	<div class="ds-thread" data-thread-key="2016/11/04/RStudio-Shiny源码解读——web框架/" data-title="RStudio Shiny源码解读——web框架" data-url="http://newfarking.github.io/http://newfarking.com/2016/11/04/RStudio-Shiny源码解读——web框架/"></div>
+<!-- 多说评论框 end -->
+<!-- 多说公共JS代码 start (一个网页只需插入一次) -->
+<script type="text/javascript">
+var duoshuoQuery = {short_name:"newfarking"};
+	(function() {
+		var ds = document.createElement('script');
+		ds.type = 'text/javascript';ds.async = true;
+		ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+		ds.charset = 'UTF-8';
+		(document.getElementsByTagName('head')[0] 
+		 || document.getElementsByTagName('body')[0]).appendChild(ds);
+	})();
+	</script>
+<!-- 多说公共JS代码 end -->
+</section>
 
 </div>
   </div>
